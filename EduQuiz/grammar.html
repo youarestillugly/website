@@ -1,0 +1,270 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduQuiz</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Styling for scrollable quiz container */
+        .scrollable-container {
+            max-height: 300px; /* Adjustable value for height */
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question {
+            background: #fff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        #results {
+            display: none;
+            background: #fff;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="EduQuizlogo.png" alt="EduQuiz Logo">
+            <h1>Edu Quiz</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="Home.html">Home</a></li>
+                <li><a href="Quizzes.html">Quizzes</a></li>
+                <li><a href="Contact.html">Contact</a></li>
+                <li><a href="Feedback.html">Feedback</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2 id="subject-name"></h2>
+        <div id="timer">Time left: <span id="time">30:00</span></div> <!-- Timer display -->
+        <form id="quiz-form">
+            <div class="scrollable-container" id="questions-container">
+                <!-- Questions will be populated here -->
+            </div>
+            <button type="button" id="add-question-btn">Add Question</button> <!-- Add Question Button -->
+            <button type="submit">Submit Quiz</button>
+        </form>
+
+        <div id="results">
+            <h3>Your Results:</h3>
+            <p id="score"></p>
+            <ul id="wrongAnswers"></ul>
+        </div>
+    </main>
+
+    <footer>
+        <img src="EduQuizlogo.png" alt="EduQuiz Logo">
+        <p>EduQuiz Developers<br>
+        Sherubtse College<br>
+        Trashigang, BHUTAN<br>
+        justlittetoxic@gmail.com<br>
+        17948009</p>
+    </footer>
+
+    <script>
+        // Timer function
+        let timeLeft = 1800; // Time in seconds (30 minutes)
+        const timerDisplay = document.getElementById('time');
+
+        const timer = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                document.getElementById('quiz-form').dispatchEvent(new Event('submit')); // Auto submit the quiz when time runs out
+            } else {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                timeLeft--;
+            }
+        }, 1000); // Update every second
+
+        const initialQuestions = [
+            { question: "Which of the following sentences is grammatically correct?", answers: ["She goes to school every day.", "She go to school every day.", "She gone to school every day.", "She going to school every day."], correct: "She go to school every day." },
+            { question: "Identify the verb in the following sentence: The cat chased the mouse", answers: ["chased", "cat", "mouse", "the"], correct: "chased" },
+            { question: "Which word is an adjective?: The tall building is impressive.", answers: ["tall", "impressive", "building", "is"], correct: "building" },
+            { question: "Choose the correct form: He has ____ apples than she does.", answers: ["more", "many", "most", "much"], correct: "more" },
+            { question: "Identify the subject in the sentence: The dog barks loudly.", answers: ["dog", "barks", "loudly", "the"], correct: "dog" },
+            { question: "Which sentence uses the past tense correctly?", answers: ["I went to the store.", "I gone to the store.", "i will went to the store", "I goes to the store."], correct: "I went to the store" },
+            { question: "What is the correct plural form of child?", answers: ["Children", "Child", "Childes", "Childrens"], correct: "8" },
+            { question: "Choose the sentence with correct subject-verb agreement", answers: ["The group of dancers are performing tonight.", "The group of dancers is performing tonight.", "The group of dancers were performing tonight.", "The group of dancers was performing tonight."], correct: "The group of dancers is performing tonight." },
+            { question: "Which sentence is correctly punctuated?", answers: ["My sister who lives in New York is coming to visit.", "y sister, who lives in New York, is coming to visit.", "My sister who lives in New York, is coming to visit.", "My sister, who lives in New York is coming to visit."], correct: "My sister, who lives in New York, is coming to visit." },
+            { question: "Fill in the blank with the appropriate preposition: She was born ___ April 10th.", answers: ["on", "in", "at", "by"], correct: "on" },
+            { question: "Which of the following sentences is correct?", answers: ["I could of gone to the party.", "I could have gone to the party.", "I could had gone to the party.", "I could has gone to the party."], correct: "I could have gone to the party." },
+            { question: "Identify the sentence with the correct use of adjectives:", answers: ["This is the most interestingest book I have ever read.", "This is the most interesting book I have ever read.", "This is the more interestinger book I have ever read.", "This is the interestingest book I have ever read."], correct: "This is the most interesting book I have ever read." },
+            { question: "Which sentence uses the correct comparative form?", answers: ["She is more smart than her brother.", "She is smarter than her brother.", "She is smart than her brother.", "She is smartest than her brother."], correct: "She is smarter than her brother." },
+            { question: "Choose the sentence with the correct use of conjunctions:", answers: ["He is both intelligent but lazy.", "He is both intelligent and lazy.", "He is either intelligent or lazy.", "He is neither intelligent nor lazy."], correct: "He is both intelligent and lazy." },
+            { question: "Which sentence uses the correct article?", answers: ["She is reading a unique book.", "She is reading an unique book.", "She is reading the unique book.", "She is reading one unique book."], correct: "She is reading a unique book." },
+            { question: "Identify the sentence with the correct use of tenses:", answers: ["I am going to the mall yesterday.", "I went to the mall yesterday.", "I goes to the mall yesterday.", "I had went to the mall yesterday."], correct: "I went to the mall yesterday." },
+            { question: "Fill in the blank with the correct modal verb: You ___ finish your homework before going out to play.", answers: ["should", "must", "might", "will"], correct: "should" },
+            { question: "Choose the sentence with the correct pronoun usage:", answers: ["Neither of the boys had their lunch.", "Neither of the boys had his lunch.", "Neither of the boys had its lunch.", "Neither of the boys had their lunches."], correct: "Neither of the boys had his lunch." },
+            { question: "Which sentence uses the correct form of the adverb?", answers: ["She runs quick.", "She runs quickly.", "She runs quicklier.", "She runs quickest."], correct: "She runs quickly." },
+            { question: "Choose the sentence with the correct punctuation:", answers: ["My favorite fruits are apples, oranges, bananas and grapes.", "My favorite fruits are apples oranges, bananas, and grapes.", "My favorite fruits are apples, oranges, bananas, and grapes.", "My favorite fruits are apples, oranges bananas, and grapes."], correct: "My favorite fruits are apples, oranges, bananas, and grapes." }
+        ];
+
+        const newQuestions = []; // Array to store newly added questions
+    
+            // Load questions into the quiz container
+            function loadQuestions() {
+                const container = document.getElementById('questions-container');
+                initialQuestions.forEach((q, index) => {
+                    addQuestionToContainer(container, q.question, q.answers, q.correct, index + 1);
+                });
+            }
+    
+            function addQuestionToContainer(container, questionText, answers, correctAnswer, index) {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <p>${index}. ${questionText}</p>
+                    ${answers.map(answer => `
+                        <label><input type="radio" name="q${index}" value="${answer}"> ${answer}</label><br>
+                    `).join('')}
+                `;
+                container.appendChild(questionDiv);
+            }
+    
+            // Function to save new questions to localStorage
+            function saveNewQuestions() {
+                localStorage.setItem('newQuestions', JSON.stringify(newQuestions));
+            }
+    
+            // Function to load new questions from localStorage
+            function loadNewQuestions() {
+                const storedQuestions = JSON.parse(localStorage.getItem('newQuestions')) || [];
+                storedQuestions.forEach((q, index) => {
+                    addQuestionToContainer(document.getElementById('questions-container'), q.question, q.answers, q.correct, initialQuestions.length + index + 1);
+                });
+                newQuestions.push(...storedQuestions); // Add them to the newQuestions array
+            }
+    
+            // Load new questions from localStorage on page load
+            window.addEventListener('DOMContentLoaded', loadNewQuestions);
+    
+            // Add Question logic
+            document.getElementById('add-question-btn').addEventListener('click', function() {
+                const questionText = prompt('Enter the new question:');
+                if (!questionText) return;
+                const answers = [];
+                for (let i = 1; i <= 4; i++) {
+                    const answer = prompt(`Enter answer choice ${i}:`);
+                    answers.push(answer);
+                }
+                const correctAnswer = prompt('Enter the correct answer:');
+                newQuestions.push({ question: questionText, answers, correct: correctAnswer });
+    
+                const questionIndex = initialQuestions.length + newQuestions.length; // Update index for new questions
+                addQuestionToContainer(document.getElementById('questions-container'), questionText, answers, correctAnswer, questionIndex);
+    
+                saveNewQuestions(); // Save new questions to localStorage
+            });
+    
+            // Quiz submission logic
+            document.getElementById('quiz-form').addEventListener('submit', function(event) {
+                // Prevent the form from submitting normally
+                event.preventDefault();
+    
+                // Confirmation dialog
+                const confirmation = confirm("Are you sure you want to submit this quiz?");
+                if (!confirmation) {
+                    return; // If the user clicks "Cancel", stop the submission
+                }
+    
+                const totalQuestions = initialQuestions.length + newQuestions.length; // Total questions count
+                let score = 0;
+                const wrongAnswers = [];
+    
+                // Evaluate initial questions
+                initialQuestions.forEach((q, index) => {
+                    const userAnswer = document.querySelector(`input[name="q${index + 1}"]:checked`);
+                    if (userAnswer) {
+                        if (userAnswer.value === q.correct) {
+                            score++;
+                        } else {
+                            wrongAnswers.push(`Question ${index + 1}: Correct answer is ${q.correct}`);
+                        }
+                    } else {
+                        wrongAnswers.push(`Question ${index + 1}: No answer selected`);
+                    }
+                });
+    
+                // Evaluate new questions
+                newQuestions.forEach((q, index) => {
+                    const userAnswer = document.querySelector(`input[name="q${initialQuestions.length + index + 1}"]:checked`);
+                    if (userAnswer) {
+                        if (userAnswer.value === q.correct) {
+                            score++;
+                        } else {
+                            wrongAnswers.push(`Question ${initialQuestions.length + index + 1}: Correct answer is ${q.correct}`);
+                        }
+                    } else {
+                        wrongAnswers.push(`Question ${initialQuestions.length + index + 1}: No answer selected`);
+                    }
+                });
+    
+                // Alert the user of their score
+                alert(`You scored ${score} out of ${totalQuestions}!`);
+    
+                // Alert if there are any wrong answers
+                if (wrongAnswers.length > 0) {
+                    alert(`You had some wrong answers:\n${wrongAnswers.join('\n')}`);
+                } else {
+                    alert("Great job! You answered all questions correctly!");
+                }
+    
+                // Display results in the results section
+                document.getElementById('score').textContent = `You scored ${score} out of ${totalQuestions}!`;
+                const wrongAnswersList = document.getElementById('wrongAnswers');
+                wrongAnswersList.innerHTML = ''; // Clear previous wrong answers
+                wrongAnswers.forEach(answer => {
+                    const li = document.createElement('li');
+                    li.textContent = answer;
+                    wrongAnswersList.appendChild(li);
+                });
+    
+                // Show the results section
+                document.getElementById('results').style.display = 'block';
+            });
+    
+            // Load initial questions on page load
+            loadQuestions();
+    </script>
+</body>
+</html>

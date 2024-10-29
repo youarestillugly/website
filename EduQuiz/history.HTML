@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduQuiz</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Styling for scrollable quiz container */
+        .scrollable-container {
+            max-height: 300px; /* Adjustable value for height */
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question {
+            background: #fff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        #results {
+            display: none;
+            background: #fff;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="EduQuizlogo.png" alt="EduQuiz Logo">
+            <h1>Edu Quiz</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="Home.html">Home</a></li>
+                <li><a href="Quizzes.html">Quizzes</a></li>
+                <li><a href="Contact.html">Contact</a></li>
+                <li><a href="Feedback.html">Feedback</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2 id="subject-name"></h2>
+        <div id="timer">Time left: <span id="time">30:00</span></div> <!-- Timer display -->
+        <form id="quiz-form">
+            <div class="scrollable-container" id="questions-container">
+                <!-- Questions will be populated here -->
+            </div>
+            <button type="button" id="add-question-btn">Add Question</button> <!-- Add Question Button -->
+            <button type="submit">Submit Quiz</button>
+        </form>
+
+        <div id="results">
+            <h3>Your Results:</h3>
+            <p id="score"></p>
+            <ul id="wrongAnswers"></ul>
+        </div>
+    </main>
+
+    <footer>
+        <img src="EduQuizlogo.png" alt="EduQuiz Logo">
+        <p>EduQuiz Developers<br>
+        Sherubtse College<br>
+        Trashigang, BHUTAN<br>
+        justlittetoxic@gmail.com<br>
+        17948009</p>
+    </footer>
+
+    <script>
+        // Timer function
+        let timeLeft = 1800; // Time in seconds (30 minutes)
+        const timerDisplay = document.getElementById('time');
+
+        const timer = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                document.getElementById('quiz-form').dispatchEvent(new Event('submit')); // Auto submit the quiz when time runs out
+            } else {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                timeLeft--;
+            }
+        }, 1000); // Update every second
+
+        const initialQuestions = [
+            { question: "Who was the first King of Bhutan?", answers: ["Jigme Wangchuck", "Ugyen Wangchuck", "Jigme Dorji Wangchuck", "Pema Lingpa"], correct: "Ugyen Wangchuck" },
+            { question: "In which year did Bhutan begin diplomatic relations with India?", answers: ["1907", "1949", "1971", "1968"], correct: "1949" },
+            { question: "What is the name of the spiritual leader who unified Bhutan in the 17th century?", answers: ["Guru Rinpoche", "Zhabdrung Ngawang Namgyal", "Phajo Drugom Zhigpo", "Pema Lingpa"], correct: "Zhabdrung Ngawang Namgyal" },
+            { question: "Which year did Bhutan join the United Nations?", answers: ["1961", "1971", "1985", "1999"], correct: "1971" },
+            { question: "Who is known as the “Father of Modern Bhutan”?", answers: ["King Jigme Singye Wangchuck", "Zhabdrung Ngawang Namgyal", "King Jigme Dorji Wangchuck", "Ugyen Wangchuck"], correct: "King Jigme Dorji Wangchuck" },
+            { question: "The Treaty of Punakha was signed in which year?", answers: ["1910", "1927", "1885", "1947"], correct: "1910" },
+            { question: "What was the primary goal of Bhutan’s policy of isolation during the early 20th century?", answers: ["To preserve its culture and independence", "To strengthen military alliances", "To develop trade with India", "To expand its territory"], correct: "To preserve its culture and independence" },
+            { question: "Who was the founder of the Bhutanese monarchy?", answers: ["Zhabdrung Ngawang Namgyal", "Ugyen Wangchuck", "Jigme Dorji Wangchuck", "Jigme Singye Wangchuck"], correct: "Ugyen Wangchuck" },
+            { question: "The National Assembly of Bhutan was established in which year?", answers: ["1953", "1961", "1974", "1985"], correct: "1953" },
+            { question: "What is the significance of 1907 in Bhutanese history?", answers: ["Treaty with India was signed", "Bhutan joined the UN", "Establishment of monarchy", "First democratic election"], correct: "Establishment of monarchy" },
+            { question: "In which year did Bhutan adopt its first written Constitution?", answers: ["1998", "2005", "2008", "2011"], correct: "2008" },
+            { question: "Which King of Bhutan introduced the concept of Gross National Happiness (GNH)?", answers: ["Jigme Dorji Wangchuck", "Ugyen Wangchuck", "Jigme Singye Wangchuck", "Jigme Khesar Namgyel Wangchuck"], correct: "Jigme Singye Wangchuck" },
+            { question: "Which event marked Bhutan's transition to a democratic constitutional monarchy?", answers: ["Coronation of King Jigme Khesar Namgyel Wangchuck", "Signing of the Punakha Treaty", "First parliamentary elections", "Joining the United Nations"], correct: "First parliamentary elections" },
+            { question: "The Dzong system of governance in Bhutan was introduced by whom?", answers: ["Guru Rinpoche", "Zhabdrung Ngawang Namgyal", "Jigme Singye Wangchuck", "Ugyen Wangchuck"], correct: "Zhabdrung Ngawang Namgyal" },
+            { question: "What is the significance of the year 1952 in Bhutanese history?", answers: ["Bhutan joined the United Nations", "The death of King Jigme Wangchuck", "The establishment of the Royal Bhutan Army", "The first postal system was introduced"], correct: "The death of King Jigme Wangchuck" },
+            { question: "Who was the longest-reigning King of Bhutan before the present King?", answers: ["Ugyen Wangchuck", "Jigme Wangchuck", "Jigme Dorji Wangchuck", "Jigme Singye Wangchuck"], correct: "Jigme Singye Wangchuck" },
+            { question: "Which Bhutanese King played a key role in Bhutan’s admission to the United Nations?", answers: ["Jigme Singye Wangchuck", "Jigme Wangchuck", "Jigme Dorji Wangchuck", "Ugyen Wangchuck"], correct: "Jigme Dorji Wangchuck" },
+            { question: "What was the capital of Bhutan before Thimphu?", answers: ["Punakha", "Paro", "Trongsa", "Bumthang"], correct: "Punakha" },
+            { question: "Which King of Bhutan introduced modern education and health systems?", answers: ["Ugyen Wangchuck", "Jigme Wangchuck", "Jigme Dorji Wangchuck", "Jigme Singye Wangchuck"], correct: "Jigme Dorji Wangchuck" },
+            { question: "When did Bhutan establish formal diplomatic relations with the United States?", answers: ["2002", "2010", "1991", "2008"], correct: "2010" }
+        ];
+
+        const newQuestions = []; // Array to store newly added questions
+    
+            // Load questions into the quiz container
+            function loadQuestions() {
+                const container = document.getElementById('questions-container');
+                initialQuestions.forEach((q, index) => {
+                    addQuestionToContainer(container, q.question, q.answers, q.correct, index + 1);
+                });
+            }
+    
+            function addQuestionToContainer(container, questionText, answers, correctAnswer, index) {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <p>${index}. ${questionText}</p>
+                    ${answers.map(answer => `
+                        <label><input type="radio" name="q${index}" value="${answer}"> ${answer}</label><br>
+                    `).join('')}
+                `;
+                container.appendChild(questionDiv);
+            }
+    
+            // Function to save new questions to localStorage
+            function saveNewQuestions() {
+                localStorage.setItem('newQuestions', JSON.stringify(newQuestions));
+            }
+    
+            // Function to load new questions from localStorage
+            function loadNewQuestions() {
+                const storedQuestions = JSON.parse(localStorage.getItem('newQuestions')) || [];
+                storedQuestions.forEach((q, index) => {
+                    addQuestionToContainer(document.getElementById('questions-container'), q.question, q.answers, q.correct, initialQuestions.length + index + 1);
+                });
+                newQuestions.push(...storedQuestions); // Add them to the newQuestions array
+            }
+    
+            // Load new questions from localStorage on page load
+            window.addEventListener('DOMContentLoaded', loadNewQuestions);
+    
+            // Add Question logic
+            document.getElementById('add-question-btn').addEventListener('click', function() {
+                const questionText = prompt('Enter the new question:');
+                if (!questionText) return;
+                const answers = [];
+                for (let i = 1; i <= 4; i++) {
+                    const answer = prompt(`Enter answer choice ${i}:`);
+                    answers.push(answer);
+                }
+                const correctAnswer = prompt('Enter the correct answer:');
+                newQuestions.push({ question: questionText, answers, correct: correctAnswer });
+    
+                const questionIndex = initialQuestions.length + newQuestions.length; // Update index for new questions
+                addQuestionToContainer(document.getElementById('questions-container'), questionText, answers, correctAnswer, questionIndex);
+    
+                saveNewQuestions(); // Save new questions to localStorage
+            });
+    
+            // Quiz submission logic
+            document.getElementById('quiz-form').addEventListener('submit', function(event) {
+                // Prevent the form from submitting normally
+                event.preventDefault();
+    
+                // Confirmation dialog
+                const confirmation = confirm("Are you sure you want to submit this quiz?");
+                if (!confirmation) {
+                    return; // If the user clicks "Cancel", stop the submission
+                }
+    
+                const totalQuestions = initialQuestions.length + newQuestions.length; // Total questions count
+                let score = 0;
+                const wrongAnswers = [];
+    
+                // Evaluate initial questions
+                initialQuestions.forEach((q, index) => {
+                    const userAnswer = document.querySelector(`input[name="q${index + 1}"]:checked`);
+                    if (userAnswer) {
+                        if (userAnswer.value === q.correct) {
+                            score++;
+                        } else {
+                            wrongAnswers.push(`Question ${index + 1}: Correct answer is ${q.correct}`);
+                        }
+                    } else {
+                        wrongAnswers.push(`Question ${index + 1}: No answer selected`);
+                    }
+                });
+    
+                // Evaluate new questions
+                newQuestions.forEach((q, index) => {
+                    const userAnswer = document.querySelector(`input[name="q${initialQuestions.length + index + 1}"]:checked`);
+                    if (userAnswer) {
+                        if (userAnswer.value === q.correct) {
+                            score++;
+                        } else {
+                            wrongAnswers.push(`Question ${initialQuestions.length + index + 1}: Correct answer is ${q.correct}`);
+                        }
+                    } else {
+                        wrongAnswers.push(`Question ${initialQuestions.length + index + 1}: No answer selected`);
+                    }
+                });
+    
+                // Alert the user of their score
+                alert(`You scored ${score} out of ${totalQuestions}!`);
+    
+                // Alert if there are any wrong answers
+                if (wrongAnswers.length > 0) {
+                    alert(`You had some wrong answers:\n${wrongAnswers.join('\n')}`);
+                } else {
+                    alert("Great job! You answered all questions correctly!");
+                }
+    
+                // Display results in the results section
+                document.getElementById('score').textContent = `You scored ${score} out of ${totalQuestions}!`;
+                const wrongAnswersList = document.getElementById('wrongAnswers');
+                wrongAnswersList.innerHTML = ''; // Clear previous wrong answers
+                wrongAnswers.forEach(answer => {
+                    const li = document.createElement('li');
+                    li.textContent = answer;
+                    wrongAnswersList.appendChild(li);
+                });
+    
+                // Show the results section
+                document.getElementById('results').style.display = 'block';
+            });
+    
+            // Load initial questions on page load
+            loadQuestions();
+    </script>
+</body>
+</html>

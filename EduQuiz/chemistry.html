@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduQuiz</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Styling for scrollable quiz container */
+        .scrollable-container {
+            max-height: 300px; /* Adjustable value for height */
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question {
+            background: #fff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        #results {
+            display: none;
+            background: #fff;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="EduQuizlogo.png" alt="EduQuiz Logo">
+            <h1>Edu Quiz</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="Home.html">Home</a></li>
+                <li><a href="Quizzes.html">Quizzes</a></li>
+                <li><a href="Contact.html">Contact</a></li>
+                <li><a href="Feedback.html">Feedback</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2 id="subject-name"></h2>
+        <div id="timer">Time left: <span id="time">30:00</span></div> <!-- Timer display -->
+        <form id="quiz-form">
+            <div class="scrollable-container" id="questions-container">
+                <!-- Questions will be populated here -->
+            </div>
+            <button type="button" id="add-question-btn">Add Question</button> <!-- Add Question Button -->
+            <button type="submit">Submit Quiz</button>
+        </form>
+
+        <div id="results">
+            <h3>Your Results:</h3>
+            <p id="score"></p>
+            <ul id="wrongAnswers"></ul>
+        </div>
+    </main>
+
+    <footer>
+        <img src="EduQuizlogo.png" alt="EduQuiz Logo">
+        <p>EduQuiz Developers<br>
+        Sherubtse College<br>
+        Trashigang, BHUTAN<br>
+        justlittetoxic@gmail.com<br>
+        17948009</p>
+    </footer>
+        <script>
+            // Timer function
+            let timeLeft = 1800; // Time in seconds (30 minutes)
+            const timerDisplay = document.getElementById('time');
+    
+            const timer = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    document.getElementById('quiz-form').dispatchEvent(new Event('submit')); // Auto submit the quiz when time runs out
+                } else {
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                    timeLeft--;
+                }
+            }, 1000); // Update every second
+    
+            const initialQuestions = [
+            { question: "What is the chemical symbol for gold?", answers: ["Ag", "Au", "Ga", "Hg"], correct: "Au" },
+            { question: "Which gas is most abundant in the Earth’s atmosphere?", answers: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"], correct: "Nitrogen" },
+            { question: "What is the pH value of pure water?", answers: ["7", "0", "1", "14"], correct: "7" },
+            { question: "Which element has the atomic number 1?", answers: ["Oxygen", "Hydrogen", "Helium", "Nitrogen"], correct: "Hydrogen" },
+            { question: "What is the molecular formula of methane?", answers: ["CH4", "C2H6", "CO2", "H2O"], correct: "CH4" },
+            { question: "Which acid is found in vinegar?", answers: ["Sulfuric acid", "Citric acid", "Acetic acid", "Hydrochloric acid"], correct: "Acetic acid" },
+            { question: "What is the common name for sodium chloride?", answers: ["Sugar", "Baking soda", "Salt", "Chalk"], correct: "Salt" },
+            { question: "Which type of bond involves the sharing of electron pairs between atoms?", answers: ["Ionic bond", "Covalent bond", "Metallic bond", "Hydrogen bond"], correct: "Covalent bond" },
+            { question: "What is the chemical formula for table sugar (sucrose)?", answers: ["C6H12O6", "C2H5OH", "NaCl", "C12H22O11"], correct: "C12H22O11" },
+            { question: "What is the atomic number of carbon?", answers: ["6", "8", "12", "4"], correct: "6" },
+            { question: "Which of the following is a noble gas?", answers: ["Hydrogen", "Oxygen", "Helium", "Chlorine"], correct: "Helium" },
+            { question: "What is the most reactive metal in the periodic table?", answers: ["Gold", "Calcium", "Potassium", "Francium"], correct: "Francium" },
+            { question: "Which type of reaction occurs when an acid and a base combine to form water and a salt?", answers: ["Oxidation", "Neutralization", "Combustion", "Decomposition"], correct: "Neutralization" },
+            { question: "What is the name of the compound with the chemical formula H2SO4?", answers: ["Hydrochloric acid", "Sulfuric acid", "Nitric acid", "Carbonic acid"], correct: "Sulfuric acid" },
+            { question: "Which gas is commonly known as laughing gas?", answers: ["Nitrogen dioxide", "Nitrous oxide", "Ammonia", "Carbon monoxide"], correct: "Nitrous oxide" },
+            { question: "What is the process by which a liquid changes to a gas at its boiling point?", answers: ["Freezing", "Condensation", "Evaporation", "Vaporization"], correct: "Vaporization" },
+            { question: "Which element is used as a semiconductor in electronic devices?", answers: ["Silicon", "Iron", "Lead", "Silver"], correct: "Silicon" },
+            { question: "What type of chemical bond involves the transfer of electrons between atoms?", answers: ["Covalent bond", "Ionic bond", "Hydrogen bond", "Metallic bond"], correct: "Ionic bond" },
+            { question: "What is the term for a solution that resists changes in pH when small amounts of acid or base are added?", answers: ["Solvent", "Buffer", "Catalyst", "Electrolyte"], correct: "Buffer" },
+            { question: "Which of the following is an example of an exothermic reaction?", answers: ["Ice melting", "Water evaporating", "Combustion of gasoline", "Photosynthesis"], correct: "Combustion of gasoline" }
+        ];
+    
+            const newQuestions = []; // Array to store newly added questions
+    
+            // Load questions into the quiz container
+            function loadQuestions() {
+                const container = document.getElementById('questions-container');
+                initialQuestions.forEach((q, index) => {
+                    addQuestionToContainer(container, q.question, q.answers, q.correct, index + 1);
+                });
+            }
+    
+            function addQuestionToContainer(container, questionText, answers, correctAnswer, index) {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <p>${index}. ${questionText}</p>
+                    ${answers.map(answer => `
+                        <label><input type="radio" name="q${index}" value="${answer}"> ${answer}</label><br>
+                    `).join('')}
+                `;
+                container.appendChild(questionDiv);
+            }
+    
+            // Function to save new questions to localStorage
+            function saveNewQuestions() {
+                localStorage.setItem('newQuestions', JSON.stringify(newQuestions));
+            }
+    
+            // Function to load new questions from localStorage
+            function loadNewQuestions() {
+                const storedQuestions = JSON.parse(localStorage.getItem('newQuestions')) || [];
+                storedQuestions.forEach((q, index) => {
+                    addQuestionToContainer(document.getElementById('questions-container'), q.question, q.answers, q.correct, initialQuestions.length + index + 1);
+                });
+                newQuestions.push(...storedQuestions); // Add them to the newQuestions array
+            }
+    
+            // Load new questions from localStorage on page load
+            window.addEventListener('DOMContentLoaded', loadNewQuestions);
+    
+            // Add Question logic
+            document.getElementById('add-question-btn').addEventListener('click', function() {
+                const questionText = prompt('Enter the new question:');
+                if (!questionText) return;
+                const answers = [];
+                for (let i = 1; i <= 4; i++) {
+                    const answer = prompt(`Enter answer choice ${i}:`);
+                    answers.push(answer);
+                }
+                const correctAnswer = prompt('Enter the correct answer:');
+                newQuestions.push({ question: questionText, answers, correct: correctAnswer });
+    
+                const questionIndex = initialQuestions.length + newQuestions.length; // Update index for new questions
+                addQuestionToContainer(document.getElementById('questions-container'), questionText, answers, correctAnswer, questionIndex);
+    
+                saveNewQuestions(); // Save new questions to localStorage
+            });
+    
+            // Quiz submission logic
+            document.getElementById('quiz-form').addEventListener('submit', function(event) {
+                // Prevent the form from submitting normally
+                event.preventDefault();
+    
+                // Confirmation dialog
+                const confirmation = confirm("Are you sure you want to submit this quiz?");
+                if (!confirmation) {
+                    return; // If the user clicks "Cancel", stop the submission
+                }
+    
+                const totalQuestions = initialQuestions.length + newQuestions.length; // Total questions count
+                let score = 0;
+                const wrongAnswers = [];
+    
+                // Evaluate initial questions
+                initialQuestions.forEach((q, index) => {
+                    const userAnswer = document.querySelector(`input[name="q${index + 1}"]:checked`);
+                    if (userAnswer) {
+                        if (userAnswer.value === q.correct) {
+                            score++;
+                        } else {
+                            wrongAnswers.push(`Question ${index + 1}: Correct answer is ${q.correct}`);
+                        }
+                    } else {
+                        wrongAnswers.push(`Question ${index + 1}: No answer selected`);
+                    }
+                });
+    
+                // Evaluate new questions
+                newQuestions.forEach((q, index) => {
+                    const userAnswer = document.querySelector(`input[name="q${initialQuestions.length + index + 1}"]:checked`);
+                    if (userAnswer) {
+                        if (userAnswer.value === q.correct) {
+                            score++;
+                        } else {
+                            wrongAnswers.push(`Question ${initialQuestions.length + index + 1}: Correct answer is ${q.correct}`);
+                        }
+                    } else {
+                        wrongAnswers.push(`Question ${initialQuestions.length + index + 1}: No answer selected`);
+                    }
+                });
+    
+                // Alert the user of their score
+                alert(`You scored ${score} out of ${totalQuestions}!`);
+    
+                // Alert if there are any wrong answers
+                if (wrongAnswers.length > 0) {
+                    alert(`You had some wrong answers:\n${wrongAnswers.join('\n')}`);
+                } else {
+                    alert("Great job! You answered all questions correctly!");
+                }
+    
+                // Display results in the results section
+                document.getElementById('score').textContent = `You scored ${score} out of ${totalQuestions}!`;
+                const wrongAnswersList = document.getElementById('wrongAnswers');
+                wrongAnswersList.innerHTML = ''; // Clear previous wrong answers
+                wrongAnswers.forEach(answer => {
+                    const li = document.createElement('li');
+                    li.textContent = answer;
+                    wrongAnswersList.appendChild(li);
+                });
+    
+                // Show the results section
+                document.getElementById('results').style.display = 'block';
+            });
+    
+            // Load initial questions on page load
+            loadQuestions();
+        </script>
+</body>
+</html>
